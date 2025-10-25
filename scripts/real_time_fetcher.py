@@ -16,7 +16,7 @@ api = REST(
 )
 
 TABLE_NAME = "real_time_prices"
-TICKERS = ["AAPL", "MSFT", "GOOG"]  # 取得したいティッカー
+TICKERS = ["AAPL"]  # 取得したいティッカー
 SAVE_INTERVAL = 5  # 秒ごとに保存
 
 # ======================================================
@@ -85,14 +85,22 @@ async def stream_realtime_prices():
         stream.subscribe_quotes(on_quote, t)
 
     print(f"🚀 {TICKERS} のリアルタイム株価を取得中...")
-    await stream.run()
+    await stream._run_forever()
 
 # ======================================================
 # 5. メイン実行
 # ======================================================
 if __name__ == "__main__":
     try:
-        asyncio.run(stream_realtime_prices())
+        loop = asyncio.get_event_loop()
+        if loop.is_running():
+            # すでにイベントループが動作中（VSCode, Jupyterなど）の場合
+            loop.create_task(stream_realtime_prices())
+            print("⚙️ 既存イベントループで実行中...")
+        else:
+            # 通常のターミナル実行
+            loop.run_until_complete(stream_realtime_prices())
+
     except KeyboardInterrupt:
         print("\n🛑 ユーザーによる停止。")
     except Exception as e:

@@ -85,5 +85,5 @@ if __name__ == "__main__":
     test_sqlalchemy_connection()
     print("\n=== psycopg2 接続テスト ===")
     test_psycopg2_connection()
-    print("\n=== APIkey 取得テスト ===")
-    get_alpaca_key()
+    # print("\n=== APIkey 取得テスト ===")
+    # get_alpaca_key()
